@@ -1,17 +1,25 @@
-#include <iostream>
 #include "Market.h"
 
 int main()
 {
-    string s = "Gdasdkasoprowing";
-    GrowthModel gM;
-    std::cout << gM.getState() << std::endl;
+    string startState = "S";
+    string hiddenModelName = "Markov";
+    float initialTransitionTendency = 0.f;
+    distributionParams f{-1,1,"Normal"};
+    distributionParams s{0,1,"Normal"};
+    distributionParams g{1,1,"Normal"};
+    float thF2S = -.33f;
+    float thS2G = .33f;
 
-    distributionParams p = gM.getEmissionProperty("G");
+    GrowthModel gM(startState,
+                   hiddenModelName,
+                   initialTransitionTendency,
+                   f,
+                   s,
+                   g,
+                   thF2S,
+                   thS2G);
     
-    std::cout << "Mean: " << p.mean << std::endl;
-    std::cout << "Var: " << p.variance << std::endl;
-
-    
+    gM.printLog();
 }
 

@@ -28,10 +28,9 @@ GrowthModel::GrowthModel()
 
 }
 
-GrowthModel::GrowthModel(string startState,
+GrowthModel::GrowthModel(string initialState,
                     string hiddenModelName,
                     float initialTransitionTendency,
-                    string initialState,
                     distributionParams f,
                     distributionParams s,
                     distributionParams g,
@@ -79,5 +78,31 @@ string GrowthModel::getState()
 
 float GrowthModel::getTransitionTendency()
 {
-    return this->transitionTendency
+    return this->transitionTendency;
+}
+
+void GrowthModel::printLog()
+{
+    // print internal state
+    std::cout << "State: " <<this->getState() << std::endl;
+    // print transition properties
+    std::cout << "T_tendency: " <<this->getTransitionTendency() << " || " ;
+    std::cout << "ThF2S: " <<this->thFalling2Stagnation << " | ";
+    std::cout << "ThS2G: " <<this->thStagnation2Growing << std::endl;
+    // Distribution Properties
+    // "Growth"
+    distributionParams p = this->getEmissionProperty("G");
+    std::cout << "Growth: " << " || ";
+    std::cout << "Mean: " << p.mean << " | ";
+    std::cout << "Var: " << p.variance << std::endl;
+    // "Stagnation"
+    p = this->getEmissionProperty("S");
+    std::cout << "Stagnation: " <<" || ";
+    std::cout << "Mean: " << p.mean << " | ";
+    std::cout << "Var: " << p.variance << std::endl;
+    // "Falling"
+    p = this->getEmissionProperty("F");
+    std::cout << "Falling: " <<" || ";
+    std::cout << "Mean: " << p.mean << " | ";
+    std::cout << "Var: " << p.variance << std::endl;
 }

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>   
 #include <string>
 #include "./Eigen/Core"
 #include <random>
@@ -25,10 +26,9 @@ class GrowthModel
     public:
         // constructors, TODO add constructor that loads from JSON file
         GrowthModel();
-        GrowthModel(string startState,
+        GrowthModel(string initialState,
                     string hiddenModelName,
                     float initialTransitionTendency,
-                    string initialState,
                     distributionParams f,
                     distributionParams s,
                     distributionParams g,
@@ -39,11 +39,14 @@ class GrowthModel
         float getTransitionTendency();
         float getGrowthRate();
         distributionParams getEmissionProperty(string state);
-        float getGrowthRate();
+        
         
         // update function to use to feed events into the growth model and advance it
         void update();
         void update(marketEvent event);
+
+        // log function
+        void printLog();
 
     private:
         // identifier for the state the model is in "G", "S" or "F"
