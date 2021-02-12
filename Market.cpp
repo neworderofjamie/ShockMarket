@@ -2,38 +2,54 @@
 
 #define string std::string
 
+
+GaussianMixtureDistribution::GaussianMixtureDistribution(vector<float> K, vector<distributionParams> params)
+    {
+        float m;
+        float v;
+        normal<float> d;
+        // set up normal distributions
+        for (int i = 0; i<K.size(); i++)
+        {
+            m = params[i].mean;
+            v = params[i].variance;
+            d = normal<float>(m,v);
+            this->distributions.push_back(d); 
+        }
+    }
+
 GrowthModel::GrowthModel()
 {
-    // init hidden model params
-    modelName = "Markov";
-    transitionTendency = 0;
-    distributionParams g = {.5f, 1.f, "Normal"};
-    distributionParams s = {0.f, 1.f, "Normal"};
-    distributionParams f = {-.5f, 1.f, "Normal"};
+    // // init hidden model params
+    // modelName = "Markov";
+    // transitionTendency = 0;
+    // std::norm g = {.5f, 1.f, "Normal"};
+    // distributionParams s = {0.f, 1.f, "Normal"};
+    // distributionParams f = {-.5f, 1.f, "Normal"};
     
-    // store emission distribution parameters for this instance
-    emissionProperty.insert(std::pair<string,distributionParams>("G",g));
-    emissionProperty.insert(std::pair<string,distributionParams>("S",s));
-    emissionProperty.insert(std::pair<string,distributionParams>("F",f));  
+    // // store emission distribution parameters for this instance
+    // emissionProperty.insert(std::pair<string,GaussianMixtureDistribution>("G",g));
+    // emissionProperty.insert(std::pair<string,GaussianMixtureDistribution>("S",s));
+    // emissionProperty.insert(std::pair<string,GaussianMixtureDistribution>("F",f));  
     
-    // set transition between states
-    // [-1:-0.34] -> tendency towards "falling" state
-        // [-0.33:0.33] -> tendency towards "stagnating" state
-        // [0.34:1] -> tendeny towards "rising" state
-    thFalling2Stagnation = -.34f;
-    thStagnation2Growing = .33f;
+    // // set transition between states
+    // // [-1:-0.34] -> tendency towards "falling" state
+    //     // [-0.33:0.33] -> tendency towards "stagnating" state
+    //     // [0.34:1] -> tendeny towards "rising" state
+    // thFalling2Stagnation = -.34f;
+    // thStagnation2Growing = .33f;
     
-    // set starting state
-    state = "S";
+    // // set starting state
+    //state = "S";
 
 }
 
 GrowthModel::GrowthModel(string initialState,
                     string hiddenModelName,
                     float initialTransitionTendency,
-                    distributionParams f,
-                    distributionParams s,
-                    distributionParams g,
+                    GaussianMixtureDistribution f,
+                    GaussianMixtureDistribution s,
+                    GaussianMixtureDistribution g,
                     float thF2S,
                     float thS2G)
 {
@@ -41,9 +57,9 @@ GrowthModel::GrowthModel(string initialState,
     modelName = hiddenModelName;
     transitionTendency = initialTransitionTendency;
     // store emission distribution parameters for this instance
-    emissionProperty.insert(std::pair<string,distributionParams>("G",g));
-    emissionProperty.insert(std::pair<string,distributionParams>("S",s));
-    emissionProperty.insert(std::pair<string,distributionParams>("F",f));  
+    emissionProperty.insert(std::pair<string,GaussianMixtureDistribution>("G",g));
+    emissionProperty.insert(std::pair<string,GaussianMixtureDistribution>("S",s));
+    emissionProperty.insert(std::pair<string,GaussianMixtureDistribution>("F",f));  
     
     // set transition between states
     thFalling2Stagnation = thF2S;
@@ -56,11 +72,6 @@ GrowthModel::GrowthModel(string initialState,
     
 }
 
-distributionParams GrowthModel::getEmissionProperty(string state)
-{
-
-    return this->emissionProperty[state];
-}
         
 void GrowthModel::update(marketEvent event)
 {
@@ -83,26 +94,26 @@ float GrowthModel::getTransitionTendency()
 
 void GrowthModel::printLog()
 {
-    // print internal state
-    std::cout << "State: " <<this->getState() << std::endl;
-    // print transition properties
-    std::cout << "T_tendency: " <<this->getTransitionTendency() << " || " ;
-    std::cout << "ThF2S: " <<this->thFalling2Stagnation << " | ";
-    std::cout << "ThS2G: " <<this->thStagnation2Growing << std::endl;
-    // Distribution Properties
-    // "Growth"
-    distributionParams p = this->getEmissionProperty("G");
-    std::cout << "Growth: " << " || ";
-    std::cout << "Mean: " << p.mean << " | ";
-    std::cout << "Var: " << p.variance << std::endl;
-    // "Stagnation"
-    p = this->getEmissionProperty("S");
-    std::cout << "Stagnation: " <<" || ";
-    std::cout << "Mean: " << p.mean << " | ";
-    std::cout << "Var: " << p.variance << std::endl;
-    // "Falling"
-    p = this->getEmissionProperty("F");
-    std::cout << "Falling: " <<" || ";
-    std::cout << "Mean: " << p.mean << " | ";
-    std::cout << "Var: " << p.variance << std::endl;
+    // // print internal state
+    // std::cout << "State: " <<this->getState() << std::endl;
+    // // print transition properties
+    // std::cout << "T_tendency: " <<this->getTransitionTendency() << " || " ;
+    // std::cout << "ThF2S: " <<this->thFalling2Stagnation << " | ";
+    // std::cout << "ThS2G: " <<this->thStagnation2Growing << std::endl;
+    // // Distribution Properties
+    // // "Growth"
+    // distributionParams p = this->getEmissionProperty("G");
+    // std::cout << "Growth: " << " || ";
+    // std::cout << "Mean: " << p.mean << " | ";
+    // std::cout << "Var: " << p.variance << std::endl;
+    // // "Stagnation"
+    // p = this->getEmissionProperty("S");
+    // std::cout << "Stagnation: " <<" || ";
+    // std::cout << "Mean: " << p.mean << " | ";
+    // std::cout << "Var: " << p.variance << std::endl;
+    // // "Falling"
+    // p = this->getEmissionProperty("F");
+    // std::cout << "Falling: " <<" || ";
+    // std::cout << "Mean: " << p.mean << " | ";
+    // std::cout << "Var: " << p.variance << std::endl;
 }
