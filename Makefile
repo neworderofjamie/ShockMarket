@@ -1,14 +1,14 @@
-OBJECTS = Main.o Market.o
+OBJECTS = Main.o Market.o imgui/imgui.o imgui/imgui_draw.o imgui/imgui_tables.o imgui/imgui_widgets.o imgui/backends/imgui_impl_glfw.o imgui/backends/imgui_impl_opengl2.o
 
-CXXFLAGS += `pkg-config --cflags glfw3`
-LDFLAGS += `pkg-config --libs glfw3`
+CXXFLAGS += `pkg-config --cflags glfw3` -I imgui
+LDFLAGS += -lGL `pkg-config --libs glfw3`
 
 .PHONY: all clean
 
 all: shock_market
 
 shock_market: $(OBJECTS)
-	@$(CXX) $(LDFLAGS) $(OBJECTS) -o $@
+	@$(CXX) $(OBJECTS) $(LDFLAGS) -o $@ 
 
 %.o: %.cpp
 	@$(CXX) -c $(CXXFLAGS) $< -o $@
