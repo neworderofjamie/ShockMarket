@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all clean
 
 all: shock_market
 
@@ -10,3 +10,6 @@ Main.o: Main.cpp
 
 Market.o: Market.cpp
 	$(CXX) -c $(CXXFLAGS) Market.cpp -o Market.o
+
+clean:
+	rm -f *.o shock_market
