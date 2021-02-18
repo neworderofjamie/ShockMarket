@@ -1,5 +1,8 @@
 OBJECTS = Main.o Market.o
 
+CXXFLAGS += `pkg-config --cflags glfw3`
+LDFLAGS += `pkg-config --libs glfw3`
+
 .PHONY: all clean
 
 all: shock_market
